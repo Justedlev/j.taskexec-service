@@ -15,10 +15,10 @@ import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.support.CronTrigger;
 import org.springframework.stereotype.Component;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Component
 @RequiredArgsConstructor
@@ -37,18 +37,39 @@ public class TaskSchedulerComponentImpl implements TaskSchedulerComponent {
         var taskMap = taskRepository.findByTaskNameIn(taskNames)
                 .stream()
                 .collect(Collectors.groupingBy(Task::getStatus));
-        var scheduleTasks = scheduleTasks(taskMap.getOrDefault(TaskStatus.WORK, Collections.emptyList()));
-        var failedToSchedule = getScheduleFail(taskMap.getOrDefault(TaskStatus.CLOSED, Collections.emptyList()));
 
-        return Stream.concat(scheduleTasks.stream(), failedToSchedule.stream())
-                .collect(Collectors.toList());
+        return taskMap.entrySet()
+                .stream()
+                .map(current -> handle(current.getKey(), current.getValue()))
+                .flatMap(Collection::stream)
+                .toList();
     }
 
-    private List<TaskResponse> getScheduleFail(List<Task> tasks) {
-        var res = List.of(defaultMapper.map(tasks, TaskResponse[].class));
-        res.forEach(current -> current.setError("Task already scheduled"));
+    private List<TaskResponse> handle(TaskStatus status, List<Task> tasks) {
+        switch (status) {
+            case NEW:
+                return tasks.stream()
+                        .map(current -> {
+                            var res = defaultMapper.map(current, TaskResponse.class);
+                            res.setError(String.format("Task in status %s, no have a cron", status));
 
-        return res;
+                            return res;
+                        })
+                        .toList();
+            case WORK:
+                return tasks.stream()
+                        .map(current -> {
+                            var res = defaultMapper.map(current, TaskResponse.class);
+                            res.setError("Task already scheduled");
+
+                            return res;
+                        })
+                        .toList();
+            case CLOSED:
+                return scheduleTasks(tasks);
+            default:
+                return Collections.emptyList();
+        }
     }
 
     private List<TaskResponse> scheduleTasks(List<Task> tasks) {
@@ -56,8 +77,7 @@ public class TaskSchedulerComponentImpl implements TaskSchedulerComponent {
         var updated = taskRepository.saveAll(tasks);
         updated.forEach(current -> taskScheduler.schedule(
                 () -> taskManager.assign(defaultMapper.map(current, TaskContext.class)),
-                new CronTrigger(current.getCron())
-        ));
+                new CronTrigger(current.getCron())));
 
         return List.of(defaultMapper.map(updated, TaskResponse[].class));
     }
