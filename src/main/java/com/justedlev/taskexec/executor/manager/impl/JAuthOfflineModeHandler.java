@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class JAuthModeExecutor extends AbstractTaskExecutor {
+public class JAuthOfflineModeHandler extends AbstractTaskExecutor {
 //    private final JAuthApiClient jAuthApiClient;
 
     @Override
