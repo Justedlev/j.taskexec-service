@@ -1,12 +1,12 @@
 package com.justedlev.taskexec.component;
 
-import com.justedlev.taskexec.repository.entity.Task;
+import com.justedlev.taskexec.model.response.TaskResponse;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface TaskComponent {
-    Optional<Task> getByName(String taskName);
+    Optional<TaskResponse> getByName(String taskName);
 
-    List<Task> getAll();
+    List<TaskResponse> getAll();
 }

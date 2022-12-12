@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -31,26 +30,17 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public List<TaskResponse> update(List<UpdateTaskRequest> request) {
-        return updateTaskComponent.update(request)
-                .stream()
-                .map(current -> defaultMapper.map(current, TaskResponse.class))
-                .collect(Collectors.toList());
+        return updateTaskComponent.update(request);
     }
 
     @Override
     public List<TaskResponse> schedule(List<ScheduleTaskRequest> request) {
-        return taskSchedulerComponent.schedule(request)
-                .stream()
-                .map(current -> defaultMapper.map(current, TaskResponse.class))
-                .collect(Collectors.toList());
+        return taskSchedulerComponent.schedule(request);
     }
 
     @Override
     public List<TaskResponse> getAll() {
-        return taskComponent.getAll()
-                .stream()
-                .map(current -> defaultMapper.map(current, TaskResponse.class))
-                .collect(Collectors.toList());
+        return taskComponent.getAll();
     }
 
     @Override

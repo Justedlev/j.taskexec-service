@@ -17,4 +17,7 @@ public class TaskResponse {
     private String taskName;
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     private Date createdAt;
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
+    private Date modifiedAt;
+    private String error;
 }

@@ -1,11 +1,12 @@
 package com.justedlev.taskexec.component.impl;
 
 import com.justedlev.taskexec.component.TaskComponent;
+import com.justedlev.taskexec.model.response.TaskResponse;
 import com.justedlev.taskexec.repository.TaskRepository;
-import com.justedlev.taskexec.repository.entity.Task;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
@@ -18,19 +19,23 @@ import java.util.stream.Stream;
 @RequiredArgsConstructor
 public class TaskComponentImpl implements TaskComponent {
     private final TaskRepository taskRepository;
+    private final ModelMapper defaultMapper;
 
     @Override
-    public Optional<Task> getByName(String taskName) {
+    public Optional<TaskResponse> getByName(String taskName) {
         return Optional.ofNullable(taskName)
                 .filter(StringUtils::isNotEmpty)
                 .map(List::of)
                 .map(taskRepository::findByTaskNameIn)
                 .map(Collection::stream)
-                .flatMap(Stream::findFirst);
+                .flatMap(Stream::findFirst)
+                .map(current -> defaultMapper.map(current, TaskResponse.class));
     }
 
     @Override
-    public List<Task> getAll() {
-        return taskRepository.findAll();
+    public List<TaskResponse> getAll() {
+        var tasks = taskRepository.findAll();
+
+        return List.of(defaultMapper.map(tasks, TaskResponse[].class));
     }
 }
