@@ -51,7 +51,7 @@ public class TaskSchedulerComponentImpl implements TaskSchedulerComponent {
                 return tasks.stream()
                         .map(current -> {
                             var res = defaultMapper.map(current, TaskResponse.class);
-                            res.setError(String.format("Task in status %s, no have a cron", status));
+                            res.setError(String.format("Task in status %s, need to update cron", status));
 
                             return res;
                         })
