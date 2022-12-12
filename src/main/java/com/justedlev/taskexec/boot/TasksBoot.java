@@ -46,16 +46,18 @@ public class TasksBoot implements ApplicationRunner {
     private void restoreTasks(List<Task> existsWithCron) {
         if (CollectionUtils.isNotEmpty(existsWithCron)) {
             var results = existsWithCron.stream()
-                    .map(current -> {
-                        var context = TaskContext.builder()
-                                .taskName(current.getTaskName())
-                                .build();
-                        taskScheduler.schedule(() -> taskManager.assign(context), new CronTrigger(current.getCron()));
-
-                        return current.getTaskName();
-                    })
+                    .map(this::restoreTask)
                     .collect(Collectors.toList());
             log.info("Scheduled {} tasks : {}", results.size(), results);
         }
+    }
+
+    private String restoreTask(Task task) {
+        var context = TaskContext.builder()
+                .taskName(task.getTaskName())
+                .build();
+        taskScheduler.schedule(() -> taskManager.assign(context), new CronTrigger(task.getCron()));
+
+        return task.getTaskName();
     }
 }
