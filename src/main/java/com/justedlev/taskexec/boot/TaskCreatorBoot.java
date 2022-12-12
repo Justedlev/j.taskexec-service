@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 @Component
 @Order(1)
 @RequiredArgsConstructor
-public class TaskRegistrarBoot implements ApplicationRunner {
+public class TaskCreatorBoot implements ApplicationRunner {
     private final Set<AbstractTaskExecutor> executors;
     private final TaskRepository taskRepository;
     private final TaskExecProperties properties;
