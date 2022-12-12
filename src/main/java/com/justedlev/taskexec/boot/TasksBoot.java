@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 @Component
 @Order(2)
 @RequiredArgsConstructor
-public class TasksBoot implements ApplicationRunner {
+public class TaskRestorerBoot implements ApplicationRunner {
     private final TaskManager taskManager;
     private final TaskRepository taskRepository;
     private final TaskScheduler taskScheduler;
