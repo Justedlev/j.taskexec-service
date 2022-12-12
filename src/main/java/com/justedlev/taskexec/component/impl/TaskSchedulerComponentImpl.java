@@ -15,6 +15,7 @@ import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.support.CronTrigger;
 import org.springframework.stereotype.Component;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -36,8 +37,8 @@ public class TaskSchedulerComponentImpl implements TaskSchedulerComponent {
         var taskMap = taskRepository.findByTaskNameIn(taskNames)
                 .stream()
                 .collect(Collectors.groupingBy(Task::getStatus));
-        var scheduleTasks = scheduleTasks(taskMap.get(TaskStatus.WORK));
-        var failedToSchedule = getScheduleFail(taskMap.get(TaskStatus.CLOSED));
+        var scheduleTasks = scheduleTasks(taskMap.getOrDefault(TaskStatus.WORK, Collections.emptyList()));
+        var failedToSchedule = getScheduleFail(taskMap.getOrDefault(TaskStatus.CLOSED, Collections.emptyList()));
 
         return Stream.concat(scheduleTasks.stream(), failedToSchedule.stream())
                 .collect(Collectors.toList());

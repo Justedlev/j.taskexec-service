@@ -1,7 +1,7 @@
 server:
   port: ${SERVER_PORT:8082}
   servlet:
-    context-path: ${SERVICE_CONTEXT_PATH}
+    context-path: ${SERVICE_CONTEXT_PATH:/api}
 spring:
   datasource:
     url: ${DB_URL}
