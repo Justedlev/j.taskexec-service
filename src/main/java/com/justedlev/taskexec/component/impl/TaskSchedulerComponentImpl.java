@@ -30,10 +30,11 @@ public class TaskSchedulerComponentImpl implements TaskSchedulerComponent {
                 .map(ScheduleTaskRequest::getTaskName)
                 .filter(StringUtils::isNotBlank)
                 .collect(Collectors.toSet());
-        var tasks = taskRepository.findByTaskNameIn(taskNames);
-        tasks.stream()
+        var tasks = taskRepository.findByTaskNameIn(taskNames)
+                .stream()
                 .filter(current -> Boolean.FALSE.equals(current.getIsScheduled()))
-                .forEach(current -> current.setIsScheduled(Boolean.TRUE));
+                .collect(Collectors.toList());
+        tasks.forEach(current -> current.setIsScheduled(Boolean.TRUE));
         var updated = taskRepository.saveAll(tasks);
         updated.forEach(current -> taskScheduler.schedule(
                 () -> taskManager.assign(defaultMapper.map(current, TaskContext.class)),
