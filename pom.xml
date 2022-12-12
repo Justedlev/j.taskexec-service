@@ -9,9 +9,9 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.justedlev</groupId>
-    <artifactId>j-taskexec</artifactId>
+    <artifactId>taskexec</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>j-taskexec</name>
+    <name>taskexec</name>
     <description>Task Executor Service</description>
     <properties>
         <java.version>11</java.version>
