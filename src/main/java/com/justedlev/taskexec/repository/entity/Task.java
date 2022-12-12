@@ -1,5 +1,6 @@
 package com.justedlev.taskexec.repository.entity;
 
+import com.justedlev.taskexec.enumeration.TaskStatus;
 import com.justedlev.taskexec.repository.entity.base.BaseEntity;
 import lombok.*;
 import org.hibernate.Hibernate;
@@ -28,8 +29,9 @@ public class Task extends BaseEntity {
     @Column(name = "cron")
     private String cron;
     @Builder.Default
-    @Column(name = "scheduled")
-    private Boolean isScheduled = Boolean.FALSE;
+    @Column(name = "status")
+    @Enumerated(EnumType.STRING)
+    private TaskStatus status = TaskStatus.NEW;
 
     @Override
     public boolean equals(Object o) {

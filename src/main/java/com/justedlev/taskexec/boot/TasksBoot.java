@@ -1,5 +1,6 @@
 package com.justedlev.taskexec.boot;
 
+import com.justedlev.taskexec.enumeration.TaskStatus;
 import com.justedlev.taskexec.executor.manager.TaskManager;
 import com.justedlev.taskexec.executor.model.TaskContext;
 import com.justedlev.taskexec.properties.TaskExecProperties;
@@ -8,7 +9,6 @@ import com.justedlev.taskexec.repository.entity.Task;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.core.annotation.Order;
@@ -35,15 +35,30 @@ public class TasksBoot implements ApplicationRunner {
         if (Boolean.TRUE.equals(properties.getRestoreTasks())) {
             var tasks = taskRepository.findAll();
             var taskMap = tasks.stream()
-                    .collect(Collectors.partitioningBy(current -> StringUtils.isNotBlank(current.getCron())));
-            restoreTasks(taskMap.get(Boolean.TRUE));
+                    .collect(Collectors.groupingBy(Task::getStatus));
+            taskMap.forEach(this::handle);
+        }
+    }
 
-            if (CollectionUtils.isNotEmpty(taskMap.get(Boolean.FALSE))) {
-                var res = taskMap.get(Boolean.FALSE).stream()
+    private void handle(TaskStatus status, List<Task> tasks) {
+        switch (status) {
+            case NEW: {
+                var names = tasks.stream()
                         .map(Task::getTaskName)
                         .collect(Collectors.toList());
-
-                log.warn("No cron for schedule tasks : {}", res);
+                log.warn("Tasks in status {} without cron : {}", status, names);
+                break;
+            }
+            case WORK: {
+                var names = tasks.stream()
+                        .map(Task::getTaskName)
+                        .collect(Collectors.toList());
+                log.warn("Tasks in status {} : {}", status, names);
+                break;
+            }
+            case CLOSED: {
+                restoreTasks(tasks);
+                break;
             }
         }
     }
@@ -53,7 +68,7 @@ public class TasksBoot implements ApplicationRunner {
             var tasks = existsWithCron.stream()
                     .map(this::restoreTask)
                     .collect(Collectors.toList());
-            tasks.forEach(current -> current.setIsScheduled(Boolean.TRUE));
+            tasks.forEach(current -> current.setStatus(TaskStatus.WORK));
             var names = taskRepository.saveAll(tasks).stream()
                     .map(Task::getTaskName)
                     .collect(Collectors.toList());
@@ -74,8 +89,8 @@ public class TasksBoot implements ApplicationRunner {
     private void closeTasks() {
         var tasks = taskRepository.findAll();
         tasks.stream()
-                .filter(current -> Boolean.TRUE.equals(current.getIsScheduled()))
-                .forEach(current -> current.setIsScheduled(Boolean.FALSE));
+                .filter(current -> TaskStatus.WORK.equals(current.getStatus()))
+                .forEach(current -> current.setStatus(TaskStatus.CLOSED));
         var closed = taskRepository.saveAll(tasks)
                 .stream()
                 .map(Task::getTaskName)

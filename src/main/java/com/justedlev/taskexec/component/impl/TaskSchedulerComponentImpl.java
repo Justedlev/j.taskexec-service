@@ -1,6 +1,7 @@
 package com.justedlev.taskexec.component.impl;
 
 import com.justedlev.taskexec.component.TaskSchedulerComponent;
+import com.justedlev.taskexec.enumeration.TaskStatus;
 import com.justedlev.taskexec.executor.manager.TaskManager;
 import com.justedlev.taskexec.executor.model.TaskContext;
 import com.justedlev.taskexec.model.request.ScheduleTaskRequest;
@@ -34,9 +35,9 @@ public class TaskSchedulerComponentImpl implements TaskSchedulerComponent {
                 .collect(Collectors.toSet());
         var taskMap = taskRepository.findByTaskNameIn(taskNames)
                 .stream()
-                .collect(Collectors.partitioningBy(Task::getIsScheduled));
-        var scheduleTasks = scheduleTasks(taskMap.get(Boolean.FALSE));
-        var failedToSchedule = getScheduleFail(taskMap.get(Boolean.TRUE));
+                .collect(Collectors.groupingBy(Task::getStatus));
+        var scheduleTasks = scheduleTasks(taskMap.get(TaskStatus.WORK));
+        var failedToSchedule = getScheduleFail(taskMap.get(TaskStatus.CLOSED));
 
         return Stream.concat(scheduleTasks.stream(), failedToSchedule.stream())
                 .collect(Collectors.toList());
@@ -50,7 +51,7 @@ public class TaskSchedulerComponentImpl implements TaskSchedulerComponent {
     }
 
     private List<TaskResponse> scheduleTasks(List<Task> tasks) {
-        tasks.forEach(current -> current.setIsScheduled(Boolean.TRUE));
+        tasks.forEach(current -> current.setStatus(TaskStatus.WORK));
         var updated = taskRepository.saveAll(tasks);
         updated.forEach(current -> taskScheduler.schedule(
                 () -> taskManager.assign(defaultMapper.map(current, TaskContext.class)),
