@@ -6,6 +6,7 @@ import com.justedlev.taskexec.executor.model.TaskContext;
 import com.justedlev.taskexec.model.request.ScheduleTaskRequest;
 import com.justedlev.taskexec.model.response.TaskResponse;
 import com.justedlev.taskexec.repository.TaskRepository;
+import com.justedlev.taskexec.repository.entity.Task;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.modelmapper.ModelMapper;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Component
 @RequiredArgsConstructor
@@ -30,10 +32,24 @@ public class TaskSchedulerComponentImpl implements TaskSchedulerComponent {
                 .map(ScheduleTaskRequest::getTaskName)
                 .filter(StringUtils::isNotBlank)
                 .collect(Collectors.toSet());
-        var tasks = taskRepository.findByTaskNameIn(taskNames)
+        var taskMap = taskRepository.findByTaskNameIn(taskNames)
                 .stream()
-                .filter(current -> Boolean.FALSE.equals(current.getIsScheduled()))
+                .collect(Collectors.partitioningBy(Task::getIsScheduled));
+        var scheduleTasks = scheduleTasks(taskMap.get(Boolean.FALSE));
+        var failedToSchedule = getScheduleFail(taskMap.get(Boolean.TRUE));
+
+        return Stream.concat(scheduleTasks.stream(), failedToSchedule.stream())
                 .collect(Collectors.toList());
+    }
+
+    private List<TaskResponse> getScheduleFail(List<Task> tasks) {
+        var res = List.of(defaultMapper.map(tasks, TaskResponse[].class));
+        res.forEach(current -> current.setError("Task already scheduled"));
+
+        return res;
+    }
+
+    private List<TaskResponse> scheduleTasks(List<Task> tasks) {
         tasks.forEach(current -> current.setIsScheduled(Boolean.TRUE));
         var updated = taskRepository.saveAll(tasks);
         updated.forEach(current -> taskScheduler.schedule(
