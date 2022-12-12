@@ -7,6 +7,7 @@ import com.justedlev.taskexec.model.request.UpdateTaskRequest;
 import com.justedlev.taskexec.repository.TaskRepository;
 import com.justedlev.taskexec.repository.entity.Task;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.scheduling.TaskScheduler;
@@ -19,6 +20,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class TaskComponentImpl implements TaskComponent {
@@ -34,15 +36,14 @@ public class TaskComponentImpl implements TaskComponent {
                 .filter(current -> StringUtils.isNotBlank(current.getCron()))
                 .collect(Collectors.toMap(UpdateTaskRequest::getTaskName, UpdateTaskRequest::getCron));
         var tasks = taskRepository.findByTaskNameIn(requestMap.keySet());
-
-        tasks.forEach(current -> {
+        tasks.forEach(current -> current.setCron(requestMap.get(current.getTaskName())));
+        var updated = taskRepository.saveAll(tasks);
+        updated.forEach(current -> {
             var context = defaultMapper.map(current, TaskContext.class);
-            var cron = requestMap.get(current.getTaskName());
-            taskScheduler.schedule(() -> taskManager.assign(context), new CronTrigger(cron));
-            current.setCron(cron);
+            taskScheduler.schedule(() -> taskManager.assign(context), new CronTrigger(current.getCron()));
         });
 
-        return taskRepository.saveAll(tasks);
+        return updated;
     }
 
     @Override
