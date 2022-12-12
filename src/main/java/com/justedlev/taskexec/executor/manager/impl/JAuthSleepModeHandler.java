@@ -18,6 +18,6 @@ public class JAuthSleepModeHandler extends AbstractTaskExecutor {
 
     @Override
     public String getTaskName() {
-        return this.getClass().getSimpleName();
+        return "j.auth/sleep-mode";
     }
 }

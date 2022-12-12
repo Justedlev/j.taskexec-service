@@ -20,6 +20,6 @@ public class JAuthOfflineModeHandler extends AbstractTaskExecutor {
 
     @Override
     public String getTaskName() {
-        return this.getClass().getSimpleName();
+        return "j.auth/offline-mode";
     }
 }
