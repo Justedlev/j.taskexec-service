@@ -46,7 +46,7 @@ public class TasksBoot implements ApplicationRunner {
                 var names = tasks.stream()
                         .map(Task::getTaskName)
                         .collect(Collectors.toList());
-                log.warn("Tasks in status {} without cron : {}", status, names);
+                log.warn("Tasks in status {} with empty cron : {}", status, names);
                 break;
             }
             case WORK: {
