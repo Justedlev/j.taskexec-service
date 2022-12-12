@@ -27,6 +27,9 @@ public class Task extends BaseEntity {
     private String taskName;
     @Column(name = "cron")
     private String cron;
+    @Builder.Default
+    @Column(name = "scheduled")
+    private Boolean isScheduled = Boolean.FALSE;
 
     @Override
     public boolean equals(Object o) {

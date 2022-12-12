@@ -1,6 +1,7 @@
 package com.justedlev.taskexec.controller;
 
 import com.justedlev.taskexec.executor.model.TaskResultResponse;
+import com.justedlev.taskexec.model.request.ScheduleTaskRequest;
 import com.justedlev.taskexec.model.request.UpdateTaskRequest;
 import com.justedlev.taskexec.model.response.TaskResponse;
 import com.justedlev.taskexec.service.TaskService;
@@ -19,6 +20,11 @@ public class TaskController {
     @PostMapping("/update")
     public ResponseEntity<List<TaskResponse>> update(@RequestBody List<UpdateTaskRequest> request) {
         return ResponseEntity.ok(taskService.update(request));
+    }
+
+    @PostMapping("/schedule")
+    public ResponseEntity<List<TaskResponse>> schedule(@RequestBody List<ScheduleTaskRequest> request) {
+        return ResponseEntity.ok(taskService.schedule(request));
     }
 
     @PostMapping("/execute/{taskName}")

@@ -16,6 +16,7 @@ import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.support.CronTrigger;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PreDestroy;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -49,19 +50,37 @@ public class TasksBoot implements ApplicationRunner {
 
     private void restoreTasks(List<Task> existsWithCron) {
         if (CollectionUtils.isNotEmpty(existsWithCron)) {
-            var results = existsWithCron.stream()
+            var tasks = existsWithCron.stream()
                     .map(this::restoreTask)
                     .collect(Collectors.toList());
-            log.info("Scheduled {} tasks : {}", results.size(), results);
+            tasks.forEach(current -> current.setIsScheduled(Boolean.TRUE));
+            var names = taskRepository.saveAll(tasks).stream()
+                    .map(Task::getTaskName)
+                    .collect(Collectors.toList());
+            log.info("Scheduled {} tasks : {}", tasks.size(), names);
         }
     }
 
-    private String restoreTask(Task task) {
+    private Task restoreTask(Task task) {
         var context = TaskContext.builder()
                 .taskName(task.getTaskName())
                 .build();
         taskScheduler.schedule(() -> taskManager.assign(context), new CronTrigger(task.getCron()));
 
-        return task.getTaskName();
+        return task;
+    }
+
+    @PreDestroy
+    private void closeTasks() {
+        var tasks = taskRepository.findAll();
+        tasks.stream()
+                .filter(current -> Boolean.TRUE.equals(current.getIsScheduled()))
+                .forEach(current -> current.setIsScheduled(Boolean.FALSE));
+        var closed = taskRepository.saveAll(tasks)
+                .stream()
+                .map(Task::getTaskName)
+                .collect(Collectors.toList());
+
+        log.info("Closed {} tasks : {}", closed.size(), closed);
     }
 }

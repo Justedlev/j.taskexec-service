@@ -1,12 +1,14 @@
 package com.justedlev.taskexec.service.impl;
 
 import com.justedlev.taskexec.component.TaskComponent;
+import com.justedlev.taskexec.component.TaskSchedulerComponent;
+import com.justedlev.taskexec.component.UpdateTaskComponent;
 import com.justedlev.taskexec.executor.manager.TaskManager;
 import com.justedlev.taskexec.executor.model.TaskContext;
 import com.justedlev.taskexec.executor.model.TaskResultResponse;
+import com.justedlev.taskexec.model.request.ScheduleTaskRequest;
 import com.justedlev.taskexec.model.request.UpdateTaskRequest;
 import com.justedlev.taskexec.model.response.TaskResponse;
-import com.justedlev.taskexec.repository.entity.Task;
 import com.justedlev.taskexec.service.TaskService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,14 +24,24 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class TaskServiceImpl implements TaskService {
     private final TaskComponent taskComponent;
+    private final UpdateTaskComponent updateTaskComponent;
+    private final TaskSchedulerComponent taskSchedulerComponent;
     private final TaskManager taskManager;
     private final ModelMapper defaultMapper;
 
     @Override
     public List<TaskResponse> update(List<UpdateTaskRequest> request) {
-        return taskComponent.updateAndSchedule(request)
+        return updateTaskComponent.update(request)
                 .stream()
-                .map(this::toTaskResponse)
+                .map(current -> defaultMapper.map(current, TaskResponse.class))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<TaskResponse> schedule(List<ScheduleTaskRequest> request) {
+        return taskSchedulerComponent.schedule(request)
+                .stream()
+                .map(current -> defaultMapper.map(current, TaskResponse.class))
                 .collect(Collectors.toList());
     }
 
@@ -37,7 +49,7 @@ public class TaskServiceImpl implements TaskService {
     public List<TaskResponse> getAll() {
         return taskComponent.getAll()
                 .stream()
-                .map(this::toTaskResponse)
+                .map(current -> defaultMapper.map(current, TaskResponse.class))
                 .collect(Collectors.toList());
     }
 
@@ -48,13 +60,5 @@ public class TaskServiceImpl implements TaskService {
         var context = defaultMapper.map(task, TaskContext.class);
 
         return taskManager.assign(context);
-    }
-
-    private TaskResponse toTaskResponse(Task entity) {
-        return TaskResponse.builder()
-                .taskName(entity.getTaskName())
-                .cron(entity.getCron())
-                .createdAt(entity.getCreatedAt())
-                .build();
     }
 }
