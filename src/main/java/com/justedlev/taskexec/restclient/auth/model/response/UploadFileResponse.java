@@ -1,4 +1,4 @@
-package com.justedlev.taskexec.restclient.jauth.model.response;
+package com.justedlev.taskexec.restclient.auth.model.response;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;

@@ -1,16 +1,16 @@
 package com.justedlev.taskexec.executor.manager.impl;
 
 import com.justedlev.taskexec.executor.manager.AbstractTaskExecutor;
-import com.justedlev.taskexec.executor.model.TaskResultResponse;
 import com.justedlev.taskexec.executor.model.TaskContext;
-import com.justedlev.taskexec.restclient.jauth.JAuthApiClient;
+import com.justedlev.taskexec.executor.model.TaskResultResponse;
+import com.justedlev.taskexec.restclient.auth.AuthApiClient;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class JAuthOfflineModeHandler extends AbstractTaskExecutor {
-    private final JAuthApiClient jAuthApiClient;
+public class AuthSleepModeHandler extends AbstractTaskExecutor {
+    private final AuthApiClient authApiClient;
 
     @Override
     protected TaskResultResponse assign(TaskContext context) {
@@ -21,6 +21,6 @@ public class JAuthOfflineModeHandler extends AbstractTaskExecutor {
 
     @Override
     public String getTaskName() {
-        return "j.auth/offline-mode";
+        return "j.auth/sleep-mode";
     }
 }

@@ -1,5 +1,6 @@
 package com.justedlev.taskexec;
 
+import com.justedlev.taskexec.properties.TaskExecProperties;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -10,11 +11,12 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 @EnableJpaAuditing
 @EnableFeignClients
 @EnableConfigurationProperties({
+        TaskExecProperties.class
 })
-public class JTaskExecutorApplication {
+public class TaskExecutorApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(JTaskExecutorApplication.class, args);
+        SpringApplication.run(TaskExecutorApplication.class, args);
     }
 
 }

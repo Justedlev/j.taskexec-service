@@ -2,6 +2,7 @@ package com.justedlev.taskexec.boot;
 
 import com.justedlev.taskexec.executor.manager.AbstractTaskExecutor;
 import com.justedlev.taskexec.executor.manager.TaskExecutor;
+import com.justedlev.taskexec.properties.TaskExecProperties;
 import com.justedlev.taskexec.repository.TaskRepository;
 import com.justedlev.taskexec.repository.entity.Task;
 import lombok.RequiredArgsConstructor;
@@ -25,19 +26,22 @@ import java.util.stream.Collectors;
 public class TaskRegistrarBoot implements ApplicationRunner {
     private final Set<AbstractTaskExecutor> executors;
     private final TaskRepository taskRepository;
+    private final TaskExecProperties properties;
 
     @Override
     public void run(ApplicationArguments args) {
-        var taskNames = getTaskNames();
-        var existTaskMap = getExistsTasks(taskNames);
-        var notExistTasks = getNotExistTasks(existTaskMap);
+        if (Boolean.TRUE.equals(properties.getRegisterTasks())) {
+            var taskNames = getTaskNames();
+            var existTaskMap = getExistsTasks(taskNames);
+            var notExistTasks = getNotExistTasks(existTaskMap);
 
-        if (CollectionUtils.isNotEmpty(notExistTasks)) {
-            var saved = taskRepository.saveAll(notExistTasks)
-                    .stream()
-                    .map(Task::getTaskName)
-                    .collect(Collectors.toList());
-            log.info("Created {} tasks : {}", saved.size(), saved);
+            if (CollectionUtils.isNotEmpty(notExistTasks)) {
+                var saved = taskRepository.saveAll(notExistTasks)
+                        .stream()
+                        .map(Task::getTaskName)
+                        .collect(Collectors.toList());
+                log.info("Created {} tasks : {}", saved.size(), saved);
+            }
         }
     }
 
