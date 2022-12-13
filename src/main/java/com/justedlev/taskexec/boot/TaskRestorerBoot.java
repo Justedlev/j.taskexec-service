@@ -42,24 +42,19 @@ public class TaskRestorerBoot implements ApplicationRunner {
 
     private void handle(TaskStatus status, List<Task> tasks) {
         switch (status) {
-            case NEW: {
+            case NEW -> {
                 var names = tasks.stream()
                         .map(Task::getTaskName)
-                        .collect(Collectors.toList());
+                        .toList();
                 log.warn("Tasks in status {} with empty cron : {}", status, names);
-                break;
             }
-            case WORK: {
+            case WORK -> {
                 var names = tasks.stream()
                         .map(Task::getTaskName)
-                        .collect(Collectors.toList());
+                        .toList();
                 log.warn("Tasks in status {} : {}", status, names);
-                break;
             }
-            case CLOSED: {
-                restoreTasks(tasks);
-                break;
-            }
+            case CLOSED -> restoreTasks(tasks);
         }
     }
 
@@ -67,11 +62,11 @@ public class TaskRestorerBoot implements ApplicationRunner {
         if (CollectionUtils.isNotEmpty(existsWithCron)) {
             var tasks = existsWithCron.stream()
                     .map(this::restoreTask)
-                    .collect(Collectors.toList());
+                    .toList();
             tasks.forEach(current -> current.setStatus(TaskStatus.WORK));
             var names = taskRepository.saveAll(tasks).stream()
                     .map(Task::getTaskName)
-                    .collect(Collectors.toList());
+                    .toList();
             log.info("Scheduled {} tasks : {}", tasks.size(), names);
         }
     }
@@ -94,7 +89,7 @@ public class TaskRestorerBoot implements ApplicationRunner {
         var closed = taskRepository.saveAll(tasks)
                 .stream()
                 .map(Task::getTaskName)
-                .collect(Collectors.toList());
+                .toList();
 
         log.info("Closed {} tasks : {}", closed.size(), closed);
     }

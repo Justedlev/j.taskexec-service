@@ -16,7 +16,6 @@ import org.springframework.scheduling.support.CronTrigger;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -46,30 +45,25 @@ public class TaskSchedulerComponentImpl implements TaskSchedulerComponent {
     }
 
     private List<TaskResponse> handle(TaskStatus status, List<Task> tasks) {
-        switch (status) {
-            case NEW:
-                return tasks.stream()
-                        .map(current -> {
-                            var res = defaultMapper.map(current, TaskResponse.class);
-                            res.setError(String.format("Task in status %s, need to update cron", status));
+        return switch (status) {
+            case NEW -> tasks.stream()
+                    .map(current -> {
+                        var res = defaultMapper.map(current, TaskResponse.class);
+                        res.setError(String.format("Task in status %s, need to update cron", status));
 
-                            return res;
-                        })
-                        .toList();
-            case WORK:
-                return tasks.stream()
-                        .map(current -> {
-                            var res = defaultMapper.map(current, TaskResponse.class);
-                            res.setError("Task already scheduled");
+                        return res;
+                    })
+                    .toList();
+            case WORK -> tasks.stream()
+                    .map(current -> {
+                        var res = defaultMapper.map(current, TaskResponse.class);
+                        res.setError("Task already scheduled");
 
-                            return res;
-                        })
-                        .toList();
-            case CLOSED:
-                return scheduleTasks(tasks);
-            default:
-                return Collections.emptyList();
-        }
+                        return res;
+                    })
+                    .toList();
+            case CLOSED -> scheduleTasks(tasks);
+        };
     }
 
     private List<TaskResponse> scheduleTasks(List<Task> tasks) {
