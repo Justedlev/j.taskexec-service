@@ -44,19 +44,13 @@ public class TaskRestorerBoot implements ApplicationRunner {
     }
 
     private void handle(TaskStatus status, List<Task> tasks) {
+        var names = tasks.stream()
+                .map(Task::getTaskName)
+                .toList();
+
         switch (status) {
-            case NEW -> {
-                var names = tasks.stream()
-                        .map(Task::getTaskName)
-                        .toList();
-                log.warn("Tasks in status {} with empty cron : {}", status, names);
-            }
-            case WORK -> {
-                var names = tasks.stream()
-                        .map(Task::getTaskName)
-                        .toList();
-                log.warn("Tasks in status {} : {}", status, names);
-            }
+            case NEW -> log.warn("Tasks no have cron for schedule : {}", names);
+            case WORK -> log.warn("Tasks already started : {}", names);
             case CLOSED -> restoreTasks(tasks);
         }
     }
