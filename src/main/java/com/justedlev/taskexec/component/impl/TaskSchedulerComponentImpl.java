@@ -9,16 +9,20 @@ import com.justedlev.taskexec.model.response.TaskResponse;
 import com.justedlev.taskexec.repository.TaskRepository;
 import com.justedlev.taskexec.repository.entity.Task;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
 import org.apache.commons.lang3.StringUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.support.CronTrigger;
 import org.springframework.stereotype.Component;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class TaskSchedulerComponentImpl implements TaskSchedulerComponent {
@@ -49,7 +53,7 @@ public class TaskSchedulerComponentImpl implements TaskSchedulerComponent {
             case NEW -> tasks.stream()
                     .map(current -> {
                         var res = defaultMapper.map(current, TaskResponse.class);
-                        res.setError(String.format("Task in status %s, need to update cron", status));
+                        res.setError(String.format("Task in status %s with empty cron", status));
 
                         return res;
                     })
@@ -67,12 +71,18 @@ public class TaskSchedulerComponentImpl implements TaskSchedulerComponent {
     }
 
     private List<TaskResponse> scheduleTasks(List<Task> tasks) {
-        tasks.forEach(current -> current.setStatus(TaskStatus.WORK));
+        tasks.forEach(current -> {
+            current.setStatus(TaskStatus.WORK);
+            taskScheduler.schedule(
+                    () -> taskManager.assign(defaultMapper.map(current, TaskContext.class)),
+                    new CronTrigger(current.getCron()));
+        });
         var updated = taskRepository.saveAll(tasks);
-        updated.forEach(current -> taskScheduler.schedule(
-                () -> taskManager.assign(defaultMapper.map(current, TaskContext.class)),
-                new CronTrigger(current.getCron())));
+        var taskNames = updated.stream()
+                .map(Task::getTaskName)
+                .toList();
+        log.info("Scheduled {} tasks : {}", updated.size(), taskNames);
 
-        return List.of(defaultMapper.map(updated, TaskResponse[].class));
+        return Arrays.asList(defaultMapper.map(updated, TaskResponse[].class));
     }
 }

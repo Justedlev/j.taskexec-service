@@ -1,5 +1,6 @@
 package com.justedlev.taskexec.boot;
 
+import com.justedlev.taskexec.component.TaskSchedulerComponent;
 import com.justedlev.taskexec.enumeration.TaskStatus;
 import com.justedlev.taskexec.executor.manager.TaskManager;
 import com.justedlev.taskexec.executor.model.TaskContext;
@@ -9,6 +10,7 @@ import com.justedlev.taskexec.repository.entity.Task;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
+import org.modelmapper.ModelMapper;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.core.annotation.Order;
@@ -29,6 +31,7 @@ public class TaskRestorerBoot implements ApplicationRunner {
     private final TaskRepository taskRepository;
     private final TaskScheduler taskScheduler;
     private final TaskExecProperties properties;
+    private final ModelMapper defaultMapper;
 
     @Override
     public void run(ApplicationArguments args) {
@@ -58,26 +61,20 @@ public class TaskRestorerBoot implements ApplicationRunner {
         }
     }
 
-    private void restoreTasks(List<Task> existsWithCron) {
-        if (CollectionUtils.isNotEmpty(existsWithCron)) {
-            var tasks = existsWithCron.stream()
-                    .map(this::restoreTask)
-                    .toList();
-            tasks.forEach(current -> current.setStatus(TaskStatus.WORK));
-            var names = taskRepository.saveAll(tasks).stream()
-                    .map(Task::getTaskName)
-                    .toList();
-            log.info("Scheduled {} tasks : {}", tasks.size(), names);
-        }
+    private void restoreTasks(List<Task> tasks) {
+        tasks.forEach(current -> {
+            restoreTask(current);
+            current.setStatus(TaskStatus.WORK);
+        });
+        var names = taskRepository.saveAll(tasks).stream()
+                .map(Task::getTaskName)
+                .toList();
+        log.info("Scheduled {} tasks : {}", tasks.size(), names);
     }
 
-    private Task restoreTask(Task task) {
-        var context = TaskContext.builder()
-                .taskName(task.getTaskName())
-                .build();
+    private void restoreTask(Task task) {
+        var context = defaultMapper.map(task, TaskContext.class);
         taskScheduler.schedule(() -> taskManager.assign(context), new CronTrigger(task.getCron()));
-
-        return task;
     }
 
     @PreDestroy
