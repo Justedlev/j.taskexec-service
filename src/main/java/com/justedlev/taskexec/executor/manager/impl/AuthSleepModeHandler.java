@@ -14,6 +14,8 @@ public class AuthSleepModeHandler extends AbstractTaskExecutor {
 
     @Override
     protected TaskResultResponse assign(TaskContext context) {
+        authApiClient.sleep();
+
         return TaskResultResponse.builder()
                 .taskName(this.getTaskName())
                 .build();

@@ -1,6 +1,5 @@
 package com.justedlev.taskexec.boot;
 
-import com.justedlev.taskexec.component.TaskSchedulerComponent;
 import com.justedlev.taskexec.enumeration.TaskStatus;
 import com.justedlev.taskexec.executor.manager.TaskManager;
 import com.justedlev.taskexec.executor.model.TaskContext;
@@ -9,7 +8,6 @@ import com.justedlev.taskexec.repository.TaskRepository;
 import com.justedlev.taskexec.repository.entity.Task;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections4.CollectionUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;

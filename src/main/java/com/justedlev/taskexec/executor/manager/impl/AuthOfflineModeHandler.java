@@ -14,6 +14,8 @@ public class AuthOfflineModeHandler extends AbstractTaskExecutor {
 
     @Override
     protected TaskResultResponse assign(TaskContext context) {
+        authApiClient.offline();
+
         return TaskResultResponse.builder()
                 .taskName(this.getTaskName())
                 .build();
