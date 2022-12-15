@@ -39,8 +39,8 @@ public class TaskCreatorBoot implements ApplicationRunner {
                 var saved = taskRepository.saveAll(notExistTasks)
                         .stream()
                         .map(Task::getTaskName)
-                        .collect(Collectors.toList());
-                log.info("Created {} tasks : {}", saved.size(), saved);
+                        .toList();
+                log.info("Created {} tasks {}", saved.size(), saved);
             }
         }
     }
@@ -51,7 +51,7 @@ public class TaskCreatorBoot implements ApplicationRunner {
                 .map(current -> Task.builder()
                         .taskName(current.getTaskName())
                         .build())
-                .collect(Collectors.toList());
+                .toList();
     }
 
     private Map<String, Task> getExistsTasks(Set<String> taskNames) {

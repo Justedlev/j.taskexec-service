@@ -15,7 +15,7 @@ public abstract class AbstractTaskExecutor implements TaskExecutor {
 
             return res;
         } catch (Exception e) {
-            log.error("Failed to execute task {} error : {}", context.getTaskName(), e.getMessage());
+            log.error("Failed to execute task {}: {}", context.getTaskName(), e.getMessage());
 
             return TaskResultResponse.builder()
                     .taskName(context.getTaskName())

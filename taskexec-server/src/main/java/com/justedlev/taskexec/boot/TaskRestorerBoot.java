@@ -47,8 +47,8 @@ public class TaskRestorerBoot implements ApplicationRunner {
                 .toList();
 
         switch (status) {
-            case NEW -> log.warn("Tasks no have cron for schedule : {}", names);
-            case WORK -> log.warn("Tasks already started : {}", names);
+            case NEW -> log.warn("Tasks no have cron for schedule {}", names);
+            case WORK -> log.warn("Tasks already started {}", names);
             case CLOSED -> restoreTasks(tasks);
         }
     }
@@ -61,7 +61,7 @@ public class TaskRestorerBoot implements ApplicationRunner {
         var names = taskRepository.saveAll(tasks).stream()
                 .map(Task::getTaskName)
                 .toList();
-        log.info("Scheduled {} tasks : {}", tasks.size(), names);
+        log.info("Scheduled {} tasks {}", tasks.size(), names);
     }
 
     private void restoreTask(Task task) {
@@ -80,6 +80,6 @@ public class TaskRestorerBoot implements ApplicationRunner {
                 .map(Task::getTaskName)
                 .toList();
 
-        log.info("Closed {} tasks : {}", closed.size(), closed);
+        log.info("Closed {} tasks {}", closed.size(), closed);
     }
 }
