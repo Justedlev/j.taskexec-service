@@ -6,7 +6,7 @@ import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 
 @Data
 @ConfigurationPropertiesScan
-@ConfigurationProperties(prefix = "task-exec")
+@ConfigurationProperties(prefix = "justedlev-service.task-exec")
 public class TaskExecProperties {
     private Boolean registerTasks;
     private Boolean restoreTasks;

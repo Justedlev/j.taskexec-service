@@ -1,20 +1,20 @@
 package com.justedlev.taskexec.executor.manager.impl;
 
+import com.justedlev.auth.client.AuthFeignClient;
 import com.justedlev.taskexec.executor.manager.AbstractTaskExecutor;
 import com.justedlev.taskexec.executor.model.TaskContext;
 import com.justedlev.taskexec.executor.model.TaskResultResponse;
-import com.justedlev.taskexec.restclient.auth.AuthApiClient;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
 public class AuthSleepModeHandler extends AbstractTaskExecutor {
-    private final AuthApiClient authApiClient;
+    private final AuthFeignClient authFeignClient;
 
     @Override
     protected TaskResultResponse assign(TaskContext context) {
-        authApiClient.sleep();
+        authFeignClient.sleep();
 
         return TaskResultResponse.builder()
                 .taskName(this.getTaskName())
