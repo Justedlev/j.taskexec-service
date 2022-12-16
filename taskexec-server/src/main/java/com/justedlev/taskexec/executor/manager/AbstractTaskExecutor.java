@@ -11,7 +11,8 @@ public abstract class AbstractTaskExecutor implements TaskExecutor {
         try {
             var start = System.currentTimeMillis();
             var res = this.assign(context);
-            log.info("Task {} was executed in {} ms", context.getTaskName(), System.currentTimeMillis() - start);
+            log.info("Task {} was executed in {} ms: {}",
+                    context.getTaskName(), System.currentTimeMillis() - start, res.getMessage());
 
             return res;
         } catch (Exception e) {

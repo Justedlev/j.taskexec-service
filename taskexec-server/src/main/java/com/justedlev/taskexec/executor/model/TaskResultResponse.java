@@ -13,6 +13,7 @@ import java.util.Date;
 @AllArgsConstructor
 public class TaskResultResponse {
     private String taskName;
+    private String message;
     private String error;
     @Builder.Default
     private Date executedAt = new Date();
