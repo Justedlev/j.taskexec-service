@@ -8,7 +8,6 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
-import java.util.HashMap;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -36,7 +35,7 @@ public class Task extends BaseEntity {
     private TaskStatus status = TaskStatus.NEW;
     @Type(type = "jsonb")
     @Column(name = "task_payload", columnDefinition = "jsonb")
-    private HashMap<String, Object> payload;
+    private Object payload;
 
     @Override
     public boolean equals(Object o) {
