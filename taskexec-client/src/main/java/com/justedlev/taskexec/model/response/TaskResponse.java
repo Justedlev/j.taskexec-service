@@ -20,6 +20,5 @@ public class TaskResponse {
     private Date createdAt;
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     private Date modifiedAt;
-    private String error;
     private TaskPayload payload;
 }

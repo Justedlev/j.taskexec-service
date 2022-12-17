@@ -50,21 +50,8 @@ public class TaskSchedulerComponentImpl implements TaskSchedulerComponent {
 
     private List<TaskResponse> handle(TaskStatus status, List<Task> tasks) {
         return switch (status) {
-            case NEW -> tasks.stream()
-                    .map(current -> {
-                        var res = defaultMapper.map(current, TaskResponse.class);
-                        res.setError(String.format("Task in status %s with empty cron", status));
-
-                        return res;
-                    })
-                    .toList();
-            case WORK -> tasks.stream()
-                    .map(current -> {
-                        var res = defaultMapper.map(current, TaskResponse.class);
-                        res.setError("Task already scheduled");
-
-                        return res;
-                    })
+            case NEW, WORK -> tasks.stream()
+                    .map(current -> defaultMapper.map(current, TaskResponse.class))
                     .toList();
             case CLOSED -> scheduleTasks(tasks);
         };
