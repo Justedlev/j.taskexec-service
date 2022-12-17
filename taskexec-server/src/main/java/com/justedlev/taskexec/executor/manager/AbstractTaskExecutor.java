@@ -16,12 +16,10 @@ public abstract class AbstractTaskExecutor implements TaskExecutor {
 
             return res;
         } catch (Exception e) {
-            log.error("Failed to execute task {}: {}", context.getTaskName(), e.getMessage());
+            var message = String.format("Failed to execute task %s: %s", context.getTaskName(), e.getMessage());
+            log.error(message);
 
-            return TaskResultResponse.builder()
-                    .taskName(context.getTaskName())
-                    .error(e.getMessage())
-                    .build();
+            throw new IllegalStateException(message);
         }
     }
 

@@ -7,21 +7,18 @@ import com.justedlev.taskexec.executor.manager.AbstractTaskExecutor;
 import com.justedlev.taskexec.executor.model.TaskContext;
 import com.justedlev.taskexec.executor.model.TaskResultResponse;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
-
-import java.util.Set;
 
 @Component
 @RequiredArgsConstructor
 public class AuthSleepModeHandler extends AbstractTaskExecutor {
     private final AuthFeignClient authFeignClient;
+    private final ModelMapper defaultMapper;
 
     @Override
     protected TaskResultResponse assign(TaskContext context) {
-        var request = UpdateAccountModeRequest.builder()
-                .fromModes(Set.of(ModeType.HIDDEN, ModeType.ONLINE))
-                .toMode(ModeType.SLEEP)
-                .build();
+        var request = defaultMapper.map(context.getPayload(), UpdateAccountModeRequest.class);
         var res = authFeignClient.updateMode(request);
 
         return TaskResultResponse.builder()

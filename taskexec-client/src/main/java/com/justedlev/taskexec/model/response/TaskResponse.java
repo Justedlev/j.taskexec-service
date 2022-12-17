@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
+import java.util.HashMap;
 
 @Data
 @Builder
@@ -20,4 +21,5 @@ public class TaskResponse {
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     private Date modifiedAt;
     private String error;
+    private HashMap<String, Object> payload;
 }

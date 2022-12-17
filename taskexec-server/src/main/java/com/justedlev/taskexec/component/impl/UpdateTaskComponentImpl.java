@@ -11,6 +11,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Component
@@ -24,12 +26,17 @@ public class UpdateTaskComponentImpl implements UpdateTaskComponent {
         var requestMap = request.stream()
                 .filter(current -> StringUtils.isNotBlank(current.getTaskName()))
                 .filter(current -> StringUtils.isNotBlank(current.getCron()))
-                .collect(Collectors.toMap(UpdateTaskRequest::getTaskName, UpdateTaskRequest::getCron));
+                .collect(Collectors.toMap(UpdateTaskRequest::getTaskName, Function.identity()));
         var tasks = taskRepository.findByTaskNameIn(requestMap.keySet());
-        tasks.forEach(current -> {
-            current.setCron(requestMap.get(current.getTaskName()));
-            current.setStatus(TaskStatus.CLOSED);
-        });
+        tasks.forEach(current -> Optional.ofNullable(requestMap.get(current.getTaskName()))
+                .ifPresent(that -> {
+                    current.setCron(that.getCron());
+                    current.setPayload(that.getPayload());
+
+                    if (current.getStatus().equals(TaskStatus.NEW)) {
+                        current.setStatus(TaskStatus.CLOSED);
+                    }
+                }));
         var updated = taskRepository.saveAll(tasks);
 
         return List.of(defaultMapper.map(updated, TaskResponse[].class));

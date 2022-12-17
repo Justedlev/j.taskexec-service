@@ -5,8 +5,10 @@ import com.justedlev.taskexec.repository.entity.base.BaseEntity;
 import lombok.*;
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
+import java.util.HashMap;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -32,6 +34,9 @@ public class Task extends BaseEntity {
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
     private TaskStatus status = TaskStatus.NEW;
+    @Type(type = "jsonb")
+    @Column(name = "task_payload", columnDefinition = "jsonb")
+    private HashMap<String, Object> payload;
 
     @Override
     public boolean equals(Object o) {
