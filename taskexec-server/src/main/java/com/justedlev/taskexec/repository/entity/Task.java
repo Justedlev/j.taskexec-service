@@ -1,6 +1,7 @@
 package com.justedlev.taskexec.repository.entity;
 
 import com.justedlev.taskexec.enumeration.TaskStatus;
+import com.justedlev.taskexec.model.TaskPayload;
 import com.justedlev.taskexec.repository.entity.base.BaseEntity;
 import lombok.*;
 import org.hibernate.Hibernate;
@@ -35,7 +36,7 @@ public class Task extends BaseEntity {
     private TaskStatus status = TaskStatus.NEW;
     @Type(type = "jsonb")
     @Column(name = "task_payload", columnDefinition = "jsonb")
-    private Object payload;
+    private TaskPayload payload = new TaskPayload();
 
     @Override
     public boolean equals(Object o) {

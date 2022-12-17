@@ -1,6 +1,7 @@
 package com.justedlev.taskexec.model.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.justedlev.taskexec.model.TaskPayload;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -20,5 +21,5 @@ public class TaskResponse {
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     private Date modifiedAt;
     private String error;
-    private Object payload;
+    private TaskPayload payload;
 }

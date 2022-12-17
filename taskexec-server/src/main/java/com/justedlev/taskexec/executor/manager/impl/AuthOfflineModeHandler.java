@@ -17,7 +17,7 @@ public class AuthOfflineModeHandler extends AbstractTaskExecutor {
 
     @Override
     protected TaskResultResponse assign(TaskContext context) {
-        var request = defaultMapper.map(context.getPayload(), UpdateAccountModeRequest.class);
+        var request = defaultMapper.map(context.getPayload().getData(), UpdateAccountModeRequest.class);
         var res = authFeignClient.updateMode(request);
 
         return TaskResultResponse.builder()
