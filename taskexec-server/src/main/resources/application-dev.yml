@@ -5,7 +5,8 @@ spring:
       ddl-auto: update
 justedlev-service:
   auth:
-    host: http://localhost:8080/api
+    client:
+        url: http://localhost:8080/api
   task-exec:
     register-tasks: true
     restore-tasks: true
