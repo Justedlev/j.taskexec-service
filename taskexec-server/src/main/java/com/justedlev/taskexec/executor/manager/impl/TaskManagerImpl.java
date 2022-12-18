@@ -5,9 +5,12 @@ import com.justedlev.taskexec.executor.manager.TaskExecutor;
 import com.justedlev.taskexec.executor.manager.TaskManager;
 import com.justedlev.taskexec.executor.model.TaskContext;
 import com.justedlev.taskexec.executor.model.TaskResultResponse;
+import lombok.NonNull;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -25,7 +28,13 @@ public class TaskManagerImpl implements TaskManager {
     }
 
     @Override
-    public TaskResultResponse assign(TaskContext context) {
-        return executorMap.get(context.getTaskName()).execute(context);
+    public TaskResultResponse assign(@NonNull TaskContext context) {
+        return Optional.ofNullable(context.getTaskName())
+                .filter(StringUtils::isNotBlank)
+                .filter(executorMap::containsKey)
+                .map(executorMap::get)
+                .map(current -> current.execute(context))
+                .orElseThrow(() -> new IllegalArgumentException(
+                        String.format("Cannot execute task %s", context.getTaskName())));
     }
 }
