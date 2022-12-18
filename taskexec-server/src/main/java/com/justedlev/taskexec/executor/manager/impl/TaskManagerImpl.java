@@ -17,10 +17,10 @@ import java.util.stream.Collectors;
 
 @Component
 public class TaskManagerImpl implements TaskManager {
-    private final Map<String, AbstractTaskExecutorHandler> executorMap;
+    private final Map<String, AbstractTaskExecutorHandler> handlerMap;
 
-    public TaskManagerImpl(Set<AbstractTaskExecutorHandler> executors) {
-        this.executorMap = executors.stream()
+    public TaskManagerImpl(Set<AbstractTaskExecutorHandler> handlers) {
+        this.handlerMap = handlers.stream()
                 .collect(Collectors.toMap(
                         TaskExecutor::getTaskName,
                         Function.identity()
@@ -31,8 +31,8 @@ public class TaskManagerImpl implements TaskManager {
     public TaskResultResponse assign(@NonNull TaskContext context) {
         return Optional.ofNullable(context.getTaskName())
                 .filter(StringUtils::isNotBlank)
-                .filter(executorMap::containsKey)
-                .map(executorMap::get)
+                .filter(handlerMap::containsKey)
+                .map(handlerMap::get)
                 .map(current -> current.execute(context))
                 .orElseThrow(() -> new IllegalArgumentException(
                         String.format("Cannot execute task %s", context.getTaskName())));
