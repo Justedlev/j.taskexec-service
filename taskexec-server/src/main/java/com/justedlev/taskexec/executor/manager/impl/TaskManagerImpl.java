@@ -1,6 +1,6 @@
 package com.justedlev.taskexec.executor.manager.impl;
 
-import com.justedlev.taskexec.executor.manager.AbstractTaskExecutor;
+import com.justedlev.taskexec.executor.manager.AbstractTaskExecutorHandler;
 import com.justedlev.taskexec.executor.manager.TaskExecutor;
 import com.justedlev.taskexec.executor.manager.TaskManager;
 import com.justedlev.taskexec.executor.model.TaskContext;
@@ -14,9 +14,9 @@ import java.util.stream.Collectors;
 
 @Component
 public class TaskManagerImpl implements TaskManager {
-    private final Map<String, AbstractTaskExecutor> executorMap;
+    private final Map<String, AbstractTaskExecutorHandler> executorMap;
 
-    public TaskManagerImpl(Set<AbstractTaskExecutor> executors) {
+    public TaskManagerImpl(Set<AbstractTaskExecutorHandler> executors) {
         this.executorMap = executors.stream()
                 .collect(Collectors.toMap(
                         TaskExecutor::getTaskName,

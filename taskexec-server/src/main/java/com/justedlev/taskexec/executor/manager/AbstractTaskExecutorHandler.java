@@ -5,12 +5,12 @@ import com.justedlev.taskexec.executor.model.TaskContext;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public abstract class AbstractTaskExecutor implements TaskExecutor {
+public abstract class AbstractTaskExecutorHandler implements TaskExecutor {
     @Override
     public TaskResultResponse execute(TaskContext context) {
         try {
             var start = System.currentTimeMillis();
-            var res = this.assign(context);
+            var res = this.handle(context);
             log.info("Task {} was executed in {} ms: {}",
                     context.getTaskName(), System.currentTimeMillis() - start, res.getMessage());
 
@@ -23,5 +23,5 @@ public abstract class AbstractTaskExecutor implements TaskExecutor {
         }
     }
 
-    protected abstract TaskResultResponse assign(TaskContext context);
+    protected abstract TaskResultResponse handle(TaskContext context);
 }
