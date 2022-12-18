@@ -1,6 +1,6 @@
 package com.justedlev.taskexec.service;
 
-import com.justedlev.taskexec.executor.model.TaskResultResponse;
+import com.justedlev.taskexec.model.response.TaskResultResponse;
 import com.justedlev.taskexec.model.request.ScheduleTaskRequest;
 import com.justedlev.taskexec.model.request.UpdateTaskRequest;
 import com.justedlev.taskexec.model.response.TaskResponse;

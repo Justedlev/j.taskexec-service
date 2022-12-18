@@ -5,7 +5,7 @@ import com.justedlev.auth.enumeration.ModeType;
 import com.justedlev.auth.model.request.UpdateAccountModeRequest;
 import com.justedlev.taskexec.executor.manager.AbstractTaskExecutorHandler;
 import com.justedlev.taskexec.executor.model.TaskContext;
-import com.justedlev.taskexec.executor.model.TaskResultResponse;
+import com.justedlev.taskexec.model.response.TaskResultResponse;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;

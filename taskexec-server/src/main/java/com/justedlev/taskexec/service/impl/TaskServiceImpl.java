@@ -5,7 +5,7 @@ import com.justedlev.taskexec.component.TaskSchedulerComponent;
 import com.justedlev.taskexec.component.UpdateTaskComponent;
 import com.justedlev.taskexec.executor.manager.TaskManager;
 import com.justedlev.taskexec.executor.model.TaskContext;
-import com.justedlev.taskexec.executor.model.TaskResultResponse;
+import com.justedlev.taskexec.model.response.TaskResultResponse;
 import com.justedlev.taskexec.model.request.ScheduleTaskRequest;
 import com.justedlev.taskexec.model.request.UpdateTaskRequest;
 import com.justedlev.taskexec.model.response.TaskResponse;

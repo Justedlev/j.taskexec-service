@@ -4,7 +4,7 @@ import com.justedlev.taskexec.executor.manager.AbstractTaskExecutorHandler;
 import com.justedlev.taskexec.executor.manager.TaskExecutor;
 import com.justedlev.taskexec.executor.manager.TaskManager;
 import com.justedlev.taskexec.executor.model.TaskContext;
-import com.justedlev.taskexec.executor.model.TaskResultResponse;
+import com.justedlev.taskexec.model.response.TaskResultResponse;
 import lombok.NonNull;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;

@@ -1,4 +1,4 @@
-package com.justedlev.taskexec.executor.model;
+package com.justedlev.taskexec.model.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

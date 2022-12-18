@@ -4,7 +4,7 @@ import com.justedlev.auth.client.AuthFeignClient;
 import com.justedlev.auth.model.request.UpdateAccountModeRequest;
 import com.justedlev.taskexec.executor.manager.AbstractTaskExecutorHandler;
 import com.justedlev.taskexec.executor.model.TaskContext;
-import com.justedlev.taskexec.executor.model.TaskResultResponse;
+import com.justedlev.taskexec.model.response.TaskResultResponse;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
@@ -17,7 +17,7 @@ public class AuthOfflineModeHandler extends AbstractTaskExecutorHandler {
 
     @Override
     public TaskResultResponse handle(TaskContext context) {
-        var request = defaultMapper.map(context.getPayload().getData(), UpdateAccountModeRequest.class);
+        var request = defaultMapper.map(context.getPayload(), UpdateAccountModeRequest.class);
         var res = authFeignClient.updateMode(request);
 
         return TaskResultResponse.builder()
