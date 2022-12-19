@@ -1,6 +1,5 @@
 package com.justedlev.taskexec.model.request;
 
-import com.justedlev.taskexec.model.TaskPayload;
 import lombok.*;
 
 @Data
@@ -12,5 +11,5 @@ public class UpdateTaskRequest {
     private String taskName;
     @NonNull
     private String cron;
-    private TaskPayload payload;
+    private Object payload;
 }

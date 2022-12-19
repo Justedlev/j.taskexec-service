@@ -6,7 +6,7 @@ spring:
 justedlev-service:
   auth:
     client:
-        url: http://localhost:8080/api
+        url: http://localhost:8888/jaccount/api
   task-exec:
     register-tasks: true
     restore-tasks: true

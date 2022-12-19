@@ -5,11 +5,11 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.justedlev</groupId>
-        <artifactId>taskexec-service</artifactId>
+        <artifactId>jtaskexec-service</artifactId>
         <version>1.0.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>taskexec-server</artifactId>
+    <artifactId>jtaskexec-server</artifactId>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
@@ -38,7 +38,7 @@
         </dependency>
         <dependency>
             <groupId>com.justedlev</groupId>
-            <artifactId>taskexec-client</artifactId>
+            <artifactId>jtaskexec-client</artifactId>
             <version>1.0.0-SNAPSHOT</version>
         </dependency>
         <dependency>
