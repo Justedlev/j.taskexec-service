@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 @Order(1)
 @RequiredArgsConstructor
 public class TaskCreatorBoot implements ApplicationRunner {
-    private final Set<AbstractTaskExecutorHandler> executors;
+    private final Set<AbstractTaskExecutorHandler> handlers;
     private final TaskRepository taskRepository;
     private final TaskExecProperties properties;
 
@@ -47,7 +47,7 @@ public class TaskCreatorBoot implements ApplicationRunner {
     }
 
     private List<Task> getNotExistTasks(Map<String, Task> existTaskMap) {
-        return executors.stream()
+        return handlers.stream()
                 .filter(current -> StringUtils.isNotBlank(current.getTaskName()))
                 .filter(current -> !existTaskMap.containsKey(current.getTaskName()))
                 .map(current -> Task.builder()
@@ -63,7 +63,7 @@ public class TaskCreatorBoot implements ApplicationRunner {
     }
 
     private Set<String> getTaskNames() {
-        return executors.stream()
+        return handlers.stream()
                 .map(TaskExecutor::getTaskName)
                 .collect(Collectors.toSet());
     }

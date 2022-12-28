@@ -35,6 +35,6 @@ public class TaskManagerImpl implements TaskManager {
                 .map(handlerMap::get)
                 .map(current -> current.execute(context))
                 .orElseThrow(() -> new IllegalArgumentException(
-                        String.format("Cannot execute task %s", context.getTaskName())));
+                        String.format("Task '%s' not exists", context.getTaskName())));
     }
 }
