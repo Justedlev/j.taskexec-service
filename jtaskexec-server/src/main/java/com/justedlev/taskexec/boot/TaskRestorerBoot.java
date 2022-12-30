@@ -3,7 +3,7 @@ package com.justedlev.taskexec.boot;
 import com.justedlev.taskexec.enumeration.TaskStatus;
 import com.justedlev.taskexec.executor.manager.TaskManager;
 import com.justedlev.taskexec.executor.model.TaskContext;
-import com.justedlev.taskexec.properties.TaskExecProperties;
+import com.justedlev.taskexec.properties.JTaskExecProperties;
 import com.justedlev.taskexec.repository.TaskRepository;
 import com.justedlev.taskexec.repository.entity.Task;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +28,7 @@ public class TaskRestorerBoot implements ApplicationRunner {
     private final TaskManager taskManager;
     private final TaskRepository taskRepository;
     private final TaskScheduler taskScheduler;
-    private final TaskExecProperties properties;
+    private final JTaskExecProperties properties;
     private final ModelMapper defaultMapper;
 
     @Override

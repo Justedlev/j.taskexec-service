@@ -3,10 +3,9 @@ spring:
     show-sql: false
     hibernate:
       ddl-auto: update
-justedlev-service:
-  account:
-    client:
-      url: http://localhost:8765/j-account-service/api
-  task-exec:
-    register-tasks: true
-    restore-tasks: true
+jaccount:
+  client:
+    url: http://localhost:8765/jaccount-service/api
+jtask-exec:
+  register-tasks: true
+  restore-tasks: true

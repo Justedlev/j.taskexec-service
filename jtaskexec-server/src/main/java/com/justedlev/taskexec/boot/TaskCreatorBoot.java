@@ -2,7 +2,7 @@ package com.justedlev.taskexec.boot;
 
 import com.justedlev.taskexec.executor.manager.AbstractTaskExecutorHandler;
 import com.justedlev.taskexec.executor.manager.TaskExecutor;
-import com.justedlev.taskexec.properties.TaskExecProperties;
+import com.justedlev.taskexec.properties.JTaskExecProperties;
 import com.justedlev.taskexec.repository.TaskRepository;
 import com.justedlev.taskexec.repository.entity.Task;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
 public class TaskCreatorBoot implements ApplicationRunner {
     private final Set<AbstractTaskExecutorHandler> handlers;
     private final TaskRepository taskRepository;
-    private final TaskExecProperties properties;
+    private final JTaskExecProperties properties;
 
     @Override
     public void run(ApplicationArguments args) {

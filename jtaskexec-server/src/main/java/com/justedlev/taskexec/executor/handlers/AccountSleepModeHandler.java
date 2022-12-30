@@ -1,6 +1,6 @@
 package com.justedlev.taskexec.executor.handlers;
 
-import com.justedlev.account.client.AccountFeignClient;
+import com.justedlev.account.client.JAccountFeignClient;
 import com.justedlev.account.enumeration.ModeType;
 import com.justedlev.account.model.request.UpdateAccountModeRequest;
 import com.justedlev.taskexec.executor.manager.AbstractTaskExecutorHandler;
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class AccountSleepModeHandler extends AbstractTaskExecutorHandler {
-    private final AccountFeignClient accountFeignClient;
+    private final JAccountFeignClient accountFeignClient;
     private final ModelMapper defaultMapper;
 
     @Override

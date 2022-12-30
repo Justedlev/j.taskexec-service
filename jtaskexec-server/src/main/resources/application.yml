@@ -4,7 +4,7 @@ server:
     context-path: ${SERVICE_CONTEXT_PATH:/api}
 spring:
   application:
-    name: j-task-exec
+    name: jtask-exec
   datasource:
     url: ${DB_URL}
     username: ${DB_USER}
@@ -20,4 +20,4 @@ spring:
 eureka:
   client:
     service-url:
-      default-zone: http://localhost:8761/j-eureka
+      default-zone: http://localhost:8761/eureka

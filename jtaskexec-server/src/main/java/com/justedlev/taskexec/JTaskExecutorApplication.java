@@ -1,7 +1,7 @@
 package com.justedlev.taskexec;
 
-import com.justedlev.account.client.AccountFeignClient;
-import com.justedlev.taskexec.properties.TaskExecProperties;
+import com.justedlev.account.client.JAccountFeignClient;
+import com.justedlev.taskexec.properties.JTaskExecProperties;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -12,14 +12,14 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 @SpringBootApplication
 @EnableJpaAuditing
 @EnableDiscoveryClient
-@EnableFeignClients(clients = AccountFeignClient.class)
+@EnableFeignClients(clients = JAccountFeignClient.class)
 @EnableConfigurationProperties({
-        TaskExecProperties.class
+        JTaskExecProperties.class
 })
-public class TaskExecutorApplication {
+public class JTaskExecutorApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(TaskExecutorApplication.class, args);
+        SpringApplication.run(JTaskExecutorApplication.class, args);
     }
 
 }
