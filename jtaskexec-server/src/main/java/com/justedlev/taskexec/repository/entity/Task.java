@@ -1,11 +1,10 @@
 package com.justedlev.taskexec.repository.entity;
 
-import com.justedlev.taskexec.enumeration.TaskStatus;
+import com.justedlev.taskexec.enumeration.TaskMode;
 import com.justedlev.taskexec.repository.entity.base.BaseEntity;
 import lombok.*;
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.util.Objects;
@@ -30,12 +29,9 @@ public class Task extends BaseEntity {
     @Column(name = "cron")
     private String cron;
     @Builder.Default
-    @Column(name = "status")
+    @Column(name = "mode")
     @Enumerated(EnumType.STRING)
-    private TaskStatus status = TaskStatus.NEW;
-    @Type(type = "jsonb")
-    @Column(name = "task_payload", columnDefinition = "jsonb")
-    private Object payload;
+    private TaskMode mode = TaskMode.NONE;
 
     @Override
     public boolean equals(Object o) {

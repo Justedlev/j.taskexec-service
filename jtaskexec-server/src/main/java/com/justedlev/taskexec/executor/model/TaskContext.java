@@ -11,5 +11,4 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class TaskContext {
     private String taskName;
-    private Object payload;
 }

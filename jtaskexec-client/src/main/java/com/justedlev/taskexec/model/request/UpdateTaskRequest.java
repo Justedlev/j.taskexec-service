@@ -11,5 +11,4 @@ public class UpdateTaskRequest {
     private String taskName;
     @NonNull
     private String cron;
-    private Object payload;
 }

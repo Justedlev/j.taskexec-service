@@ -1,6 +1,6 @@
 package com.justedlev.taskexec.boot;
 
-import com.justedlev.taskexec.enumeration.TaskStatus;
+import com.justedlev.taskexec.enumeration.TaskMode;
 import com.justedlev.taskexec.executor.manager.TaskManager;
 import com.justedlev.taskexec.executor.model.TaskContext;
 import com.justedlev.taskexec.properties.JTaskExecProperties;
@@ -36,27 +36,27 @@ public class TaskRestorerBoot implements ApplicationRunner {
         if (Boolean.TRUE.equals(properties.getRestoreTasks())) {
             var tasks = taskRepository.findAll();
             var taskMap = tasks.stream()
-                    .collect(Collectors.groupingBy(Task::getStatus));
+                    .collect(Collectors.groupingBy(Task::getMode));
             taskMap.forEach(this::handle);
         }
     }
 
-    private void handle(TaskStatus status, List<Task> tasks) {
+    private void handle(TaskMode status, List<Task> tasks) {
         var names = tasks.stream()
                 .map(Task::getTaskName)
                 .toList();
 
-        switch (status) {
-            case NEW -> log.warn("Tasks no have cron for schedule {}", names);
-            case WORK -> log.warn("Tasks already started {}", names);
-            case CLOSED -> restoreTasks(tasks);
+        if (TaskMode.NONE.equals(status)) {
+            log.warn("Tasks no have cron for schedule {}", names);
+        } else if (TaskMode.STOPPED.equals(status) || TaskMode.SCHEDULED.equals(status)) {
+            restoreTasks(tasks);
         }
     }
 
     private void restoreTasks(List<Task> tasks) {
         tasks.forEach(current -> {
             restoreTask(current);
-            current.setStatus(TaskStatus.WORK);
+            current.setMode(TaskMode.SCHEDULED);
         });
         var names = taskRepository.saveAll(tasks).stream()
                 .map(Task::getTaskName)
@@ -70,16 +70,16 @@ public class TaskRestorerBoot implements ApplicationRunner {
     }
 
     @PreDestroy
-    private void closeTasks() {
+    private void stopTasks() {
         var tasks = taskRepository.findAll();
         tasks.stream()
-                .filter(current -> TaskStatus.WORK.equals(current.getStatus()))
-                .forEach(current -> current.setStatus(TaskStatus.CLOSED));
+                .filter(current -> TaskMode.SCHEDULED.equals(current.getMode()))
+                .forEach(current -> current.setMode(TaskMode.STOPPED));
         var closed = taskRepository.saveAll(tasks)
                 .stream()
                 .map(Task::getTaskName)
                 .toList();
 
-        log.info("Closed {} tasks {}", closed.size(), closed);
+        log.info("Stopped {} tasks {}", closed.size(), closed);
     }
 }

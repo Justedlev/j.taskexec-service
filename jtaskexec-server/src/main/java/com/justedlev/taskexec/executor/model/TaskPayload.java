@@ -1,16 +1,16 @@
-package com.justedlev.taskexec.model;
+package com.justedlev.taskexec.executor.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.io.Serializable;
-
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class TaskPayload implements Serializable {
-    private Object data;
+public class TaskPayload<R> {
+    private String taskName;
+    private String cron;
+    private R request;
 }

@@ -1,7 +1,7 @@
 package com.justedlev.taskexec.component.impl;
 
 import com.justedlev.taskexec.component.UpdateTaskComponent;
-import com.justedlev.taskexec.enumeration.TaskStatus;
+import com.justedlev.taskexec.enumeration.TaskMode;
 import com.justedlev.taskexec.model.request.UpdateTaskRequest;
 import com.justedlev.taskexec.model.response.TaskResponse;
 import com.justedlev.taskexec.repository.TaskRepository;
@@ -31,11 +31,7 @@ public class UpdateTaskComponentImpl implements UpdateTaskComponent {
         tasks.forEach(current -> Optional.ofNullable(requestMap.get(current.getTaskName()))
                 .ifPresent(that -> {
                     current.setCron(that.getCron());
-                    current.setPayload(that.getPayload());
-
-                    if (current.getStatus().equals(TaskStatus.NEW)) {
-                        current.setStatus(TaskStatus.CLOSED);
-                    }
+                    current.setMode(TaskMode.STOPPED);
                 }));
         var updated = taskRepository.saveAll(tasks);
 

@@ -1,7 +1,7 @@
 package com.justedlev.taskexec.component.impl;
 
 import com.justedlev.taskexec.component.TaskSchedulerComponent;
-import com.justedlev.taskexec.enumeration.TaskStatus;
+import com.justedlev.taskexec.enumeration.TaskMode;
 import com.justedlev.taskexec.executor.manager.TaskManager;
 import com.justedlev.taskexec.executor.model.TaskContext;
 import com.justedlev.taskexec.model.request.ScheduleTaskRequest;
@@ -39,7 +39,7 @@ public class TaskSchedulerComponentImpl implements TaskSchedulerComponent {
                 .collect(Collectors.toSet());
         var taskMap = taskRepository.findByTaskNameIn(taskNames)
                 .stream()
-                .collect(Collectors.groupingBy(Task::getStatus));
+                .collect(Collectors.groupingBy(Task::getMode));
 
         return taskMap.entrySet()
                 .stream()
@@ -48,18 +48,18 @@ public class TaskSchedulerComponentImpl implements TaskSchedulerComponent {
                 .toList();
     }
 
-    private List<TaskResponse> handle(TaskStatus status, List<Task> tasks) {
+    private List<TaskResponse> handle(TaskMode status, List<Task> tasks) {
         return switch (status) {
-            case NEW, WORK -> tasks.stream()
+            case NONE, SCHEDULED -> tasks.stream()
                     .map(current -> defaultMapper.map(current, TaskResponse.class))
                     .toList();
-            case CLOSED -> scheduleTasks(tasks);
+            case STOPPED -> scheduleTasks(tasks);
         };
     }
 
     private List<TaskResponse> scheduleTasks(List<Task> tasks) {
         tasks.forEach(current -> {
-            current.setStatus(TaskStatus.WORK);
+            current.setMode(TaskMode.SCHEDULED);
             taskScheduler.schedule(
                     () -> taskManager.assign(defaultMapper.map(current, TaskContext.class)),
                     new CronTrigger(current.getCron()));
