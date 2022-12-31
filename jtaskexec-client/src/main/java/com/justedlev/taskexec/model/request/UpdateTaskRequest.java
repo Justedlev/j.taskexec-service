@@ -2,13 +2,18 @@ package com.justedlev.taskexec.model.request;
 
 import lombok.*;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class UpdateTaskRequest {
-    @NonNull
+    @NotNull
+    @NotBlank
     private String taskName;
-    @NonNull
+    @NotNull
+    @NotBlank
     private String cron;
 }
