@@ -1,6 +1,5 @@
 package com.justedlev.taskexec.boot;
 
-import com.justedlev.taskexec.executor.manager.AbstractTaskHandler;
 import com.justedlev.taskexec.executor.manager.TaskHandler;
 import com.justedlev.taskexec.properties.JTaskExecProperties;
 import com.justedlev.taskexec.repository.TaskRepository;
@@ -26,7 +25,7 @@ import java.util.stream.Collectors;
 @Order(1)
 @RequiredArgsConstructor
 public class TaskCreatorBoot implements ApplicationRunner {
-    private final Set<AbstractTaskHandler<?>> handlers;
+    private final Set<TaskHandler<?>> handlers;
     private final TaskRepository taskRepository;
     private final JTaskExecProperties properties;
 
