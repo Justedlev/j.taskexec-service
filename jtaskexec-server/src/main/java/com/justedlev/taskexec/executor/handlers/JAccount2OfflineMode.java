@@ -12,7 +12,7 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
-public class AccountSleepModeHandler extends AbstractTaskHandler<UpdateAccountModeRequest> {
+public class JAccount2OfflineMode extends AbstractTaskHandler<UpdateAccountModeRequest> {
     private final JAccountFeignClient accountFeignClient;
 
     @Override
@@ -21,20 +21,15 @@ public class AccountSleepModeHandler extends AbstractTaskHandler<UpdateAccountMo
 
         return TaskResultResponse.builder()
                 .taskName(this.taskName())
-                .message(String.format("Updated %s accounts to mode %s", res.size(), payload().getToMode()))
+                .message(String.format("Updated %s accounts to mode '%s'", res.size(), payload().getToMode()))
                 .build();
-    }
-
-    @Override
-    public String taskName() {
-        return "auth-sleep-mode";
     }
 
     @Override
     public UpdateAccountModeRequest payload() {
         return UpdateAccountModeRequest.builder()
-                .toMode(ModeType.SLEEP)
-                .fromModes(List.of(ModeType.ONLINE, ModeType.HIDDEN))
+                .toMode(ModeType.OFFLINE)
+                .fromModes(List.of(ModeType.ONLINE, ModeType.HIDDEN, ModeType.SLEEP))
                 .build();
     }
 }

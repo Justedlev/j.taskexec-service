@@ -16,5 +16,10 @@ public abstract class AbstractTaskHandler<P> implements TaskHandler<P> {
         return res;
     }
 
+    @Override
+    public String taskName() {
+        return this.getClass().getSimpleName();
+    }
+
     protected abstract TaskResultResponse handle();
 }

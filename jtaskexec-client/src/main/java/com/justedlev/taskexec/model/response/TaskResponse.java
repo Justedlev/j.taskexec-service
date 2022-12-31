@@ -19,5 +19,4 @@ public class TaskResponse {
     private Date createdAt;
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     private Date modifiedAt;
-    private Object payload;
 }
