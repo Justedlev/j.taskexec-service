@@ -3,14 +3,12 @@ package com.justedlev.taskexec.component.impl;
 import com.justedlev.taskexec.component.TaskSchedulerComponent;
 import com.justedlev.taskexec.enumeration.TaskMode;
 import com.justedlev.taskexec.executor.manager.TaskManager;
-import com.justedlev.taskexec.executor.model.TaskContext;
 import com.justedlev.taskexec.model.request.ScheduleTaskRequest;
 import com.justedlev.taskexec.model.response.TaskResponse;
 import com.justedlev.taskexec.repository.TaskRepository;
 import com.justedlev.taskexec.repository.entity.Task;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
 import org.apache.commons.lang3.StringUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.scheduling.TaskScheduler;
@@ -61,8 +59,9 @@ public class TaskSchedulerComponentImpl implements TaskSchedulerComponent {
         tasks.forEach(current -> {
             current.setMode(TaskMode.SCHEDULED);
             taskScheduler.schedule(
-                    () -> taskManager.assign(defaultMapper.map(current, TaskContext.class)),
-                    new CronTrigger(current.getCron()));
+                    () -> taskManager.assign(current.getTaskName()),
+                    new CronTrigger(current.getCron())
+            );
         });
         var updated = taskRepository.saveAll(tasks);
         var taskNames = updated.stream()

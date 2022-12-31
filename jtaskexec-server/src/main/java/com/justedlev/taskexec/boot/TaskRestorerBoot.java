@@ -2,13 +2,11 @@ package com.justedlev.taskexec.boot;
 
 import com.justedlev.taskexec.enumeration.TaskMode;
 import com.justedlev.taskexec.executor.manager.TaskManager;
-import com.justedlev.taskexec.executor.model.TaskContext;
 import com.justedlev.taskexec.properties.JTaskExecProperties;
 import com.justedlev.taskexec.repository.TaskRepository;
 import com.justedlev.taskexec.repository.entity.Task;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.modelmapper.ModelMapper;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.core.annotation.Order;
@@ -29,7 +27,6 @@ public class TaskRestorerBoot implements ApplicationRunner {
     private final TaskRepository taskRepository;
     private final TaskScheduler taskScheduler;
     private final JTaskExecProperties properties;
-    private final ModelMapper defaultMapper;
 
     @Override
     public void run(ApplicationArguments args) {
@@ -65,8 +62,10 @@ public class TaskRestorerBoot implements ApplicationRunner {
     }
 
     private void restoreTask(Task task) {
-        var context = defaultMapper.map(task, TaskContext.class);
-        taskScheduler.schedule(() -> taskManager.assign(context), new CronTrigger(task.getCron()));
+        taskScheduler.schedule(
+                () -> taskManager.assign(task.getTaskName()),
+                new CronTrigger(task.getCron())
+        );
     }
 
     @PreDestroy

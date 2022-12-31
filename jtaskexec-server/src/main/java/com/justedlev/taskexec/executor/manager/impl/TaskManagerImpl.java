@@ -2,9 +2,7 @@ package com.justedlev.taskexec.executor.manager.impl;
 
 import com.justedlev.taskexec.executor.manager.TaskHandler;
 import com.justedlev.taskexec.executor.manager.TaskManager;
-import com.justedlev.taskexec.executor.model.TaskContext;
 import com.justedlev.taskexec.model.response.TaskResultResponse;
-import lombok.NonNull;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
@@ -27,13 +25,13 @@ public class TaskManagerImpl implements TaskManager {
     }
 
     @Override
-    public TaskResultResponse assign(@NonNull TaskContext context) {
-        return Optional.ofNullable(context.getTaskName())
+    public TaskResultResponse assign(String taskName) {
+        return Optional.ofNullable(taskName)
                 .filter(StringUtils::isNotBlank)
                 .filter(handlerMap::containsKey)
                 .map(handlerMap::get)
-                .map(current -> current.execute(context))
+                .map(TaskHandler::execute)
                 .orElseThrow(() -> new IllegalArgumentException(
-                        String.format("Task '%s' not exists", context.getTaskName())));
+                        String.format("Task '%s' not exists", taskName)));
     }
 }
