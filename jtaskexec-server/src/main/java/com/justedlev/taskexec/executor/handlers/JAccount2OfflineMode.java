@@ -14,14 +14,15 @@ import java.util.List;
 @RequiredArgsConstructor
 public class JAccount2OfflineMode extends AbstractTaskHandler<UpdateAccountModeRequest> {
     private final JAccountFeignClient accountFeignClient;
+    private final UpdateAccountModeRequest payload = payload();
 
     @Override
     public TaskResultResponse handle() {
-        var res = accountFeignClient.updateMode(payload());
+        var res = accountFeignClient.updateMode(payload);
 
         return TaskResultResponse.builder()
                 .taskName(this.taskName())
-                .message(String.format("Updated %s accounts to mode '%s'", res.size(), payload().getToMode()))
+                .message(String.format("Updated %s accounts to mode '%s'", res.size(), payload.getToMode()))
                 .build();
     }
 

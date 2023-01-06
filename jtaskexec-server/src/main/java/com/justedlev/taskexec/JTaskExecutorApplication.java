@@ -17,9 +17,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
         JTaskExecProperties.class
 })
 public class JTaskExecutorApplication {
-
     public static void main(String[] args) {
         SpringApplication.run(JTaskExecutorApplication.class, args);
     }
-
 }

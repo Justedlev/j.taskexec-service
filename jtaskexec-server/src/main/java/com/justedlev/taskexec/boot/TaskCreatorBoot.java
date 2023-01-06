@@ -7,7 +7,6 @@ import com.justedlev.taskexec.repository.entity.Task;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
@@ -49,7 +48,6 @@ public class TaskCreatorBoot implements ApplicationRunner {
     private List<Task> getNotExistTasks(Map<String, Task> existTaskMap) {
         return handlers.stream()
                 .filter(current -> StringUtils.isNotBlank(current.taskName()))
-                .filter(current -> ObjectUtils.isNotEmpty(current.payload()))
                 .filter(current -> !existTaskMap.containsKey(current.taskName()))
                 .map(current -> Task.builder()
                         .taskName(current.taskName())
