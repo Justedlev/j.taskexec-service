@@ -1,8 +1,8 @@
 package com.justedlev.taskexec.controller;
 
-import com.justedlev.model.response.ErrorDetailsResponse;
-import com.justedlev.model.response.ValidationErrorResponse;
-import com.justedlev.model.response.ViolationResponse;
+import com.justedlev.common.model.response.ErrorDetailsResponse;
+import com.justedlev.common.model.response.ValidationErrorResponse;
+import com.justedlev.common.model.response.ViolationResponse;
 import feign.FeignException;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
