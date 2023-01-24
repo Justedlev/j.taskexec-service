@@ -4,7 +4,7 @@ server:
     context-path: ${SERVICE_CONTEXT_PATH:/api}
 spring:
   application:
-    name: jtask-exec
+    name: jtaskexec-service
   datasource:
     url: ${DB_URL}
     username: ${DB_USER}
