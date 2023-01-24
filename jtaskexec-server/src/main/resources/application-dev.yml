@@ -1,0 +1,11 @@
+spring:
+  jpa:
+    show-sql: false
+    hibernate:
+      ddl-auto: update
+jaccount:
+  client:
+    url: http://localhost:8765/api
+jtask-exec:
+  register-tasks: true
+  restore-tasks: true
