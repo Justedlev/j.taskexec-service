@@ -5,7 +5,9 @@ import com.justedlev.common.model.response.ValidationErrorResponse;
 import com.justedlev.common.model.response.ViolationResponse;
 import feign.FeignException;
 import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +22,10 @@ import javax.validation.ConstraintViolationException;
 
 @Slf4j
 @ControllerAdvice
-public class AdviceController extends ResponseEntityExceptionHandler {
+@RequiredArgsConstructor
+public class ResponseExceptionHandler extends ResponseEntityExceptionHandler {
+    private final ModelMapper defaultMapper;
+
     @ExceptionHandler(value = IllegalArgumentException.class)
     public ResponseEntity<ErrorDetailsResponse> handle(Exception ex, WebRequest request) {
         log.error(ex.getMessage());
