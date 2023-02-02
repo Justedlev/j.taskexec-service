@@ -5,7 +5,7 @@ spring:
       ddl-auto: update
 jaccount:
   client:
-    url: ${GATEWAY_HOST}/account/api/v1
+    url: ${GATEWAY_HOST}/account/api/
 jtask-exec:
   register-tasks: true
   restore-tasks: true
