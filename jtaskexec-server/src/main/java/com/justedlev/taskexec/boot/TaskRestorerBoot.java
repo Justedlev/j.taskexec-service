@@ -40,7 +40,7 @@ public class TaskRestorerBoot implements ApplicationRunner {
 
     private void handle(TaskMode status, List<Task> tasks) {
         var names = tasks.stream()
-                .map(Task::getTaskName)
+                .map(Task::getId)
                 .toList();
 
         if (TaskMode.NONE.equals(status)) {
@@ -56,14 +56,14 @@ public class TaskRestorerBoot implements ApplicationRunner {
             current.setMode(TaskMode.SCHEDULED);
         });
         var names = taskRepository.saveAll(tasks).stream()
-                .map(Task::getTaskName)
+                .map(Task::getId)
                 .toList();
         log.info("Scheduled {} tasks {}", tasks.size(), names);
     }
 
     private void restoreTask(Task task) {
         taskScheduler.schedule(
-                () -> taskManager.assign(task.getTaskName()),
+                taskManager.assign(task.getId()),
                 new CronTrigger(task.getCron())
         );
     }
@@ -76,7 +76,7 @@ public class TaskRestorerBoot implements ApplicationRunner {
                 .forEach(current -> current.setMode(TaskMode.STOPPED));
         var closed = taskRepository.saveAll(tasks)
                 .stream()
-                .map(Task::getTaskName)
+                .map(Task::getId)
                 .toList();
 
         log.info("Stopped {} tasks {}", closed.size(), closed);

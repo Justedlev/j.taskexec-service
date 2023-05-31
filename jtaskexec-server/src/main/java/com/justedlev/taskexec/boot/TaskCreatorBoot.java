@@ -38,7 +38,7 @@ public class TaskCreatorBoot implements ApplicationRunner {
             if (CollectionUtils.isNotEmpty(notExistTasks)) {
                 var saved = taskRepository.saveAll(notExistTasks)
                         .stream()
-                        .map(Task::getTaskName)
+                        .map(Task::getId)
                         .toList();
                 log.info("Created {} tasks {}", saved.size(), saved);
             }
@@ -50,7 +50,7 @@ public class TaskCreatorBoot implements ApplicationRunner {
                 .filter(current -> StringUtils.isNotBlank(current.taskName()))
                 .filter(current -> !existTaskMap.containsKey(current.taskName()))
                 .map(current -> Task.builder()
-                        .taskName(current.taskName())
+                        .id(current.taskName())
                         .build())
                 .toList();
     }
@@ -58,7 +58,7 @@ public class TaskCreatorBoot implements ApplicationRunner {
     private Map<String, Task> getExistsTasks(Set<String> taskNames) {
         return taskRepository.findByTaskNameIn(taskNames)
                 .stream()
-                .collect(Collectors.toMap(Task::getTaskName, Function.identity()));
+                .collect(Collectors.toMap(Task::getId, Function.identity()));
     }
 
     private Set<String> getTaskNames() {

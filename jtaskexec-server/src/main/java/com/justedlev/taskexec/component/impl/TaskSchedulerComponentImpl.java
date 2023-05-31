@@ -59,7 +59,7 @@ public class TaskSchedulerComponentImpl implements TaskSchedulerComponent {
         tasks.forEach(current -> {
             current.setMode(TaskMode.SCHEDULED);
             taskScheduler.schedule(
-                    () -> taskManager.assign(current.getTaskName()),
+                    taskManager.assign(current.getTaskName()),
                     new CronTrigger(current.getCron())
             );
         });

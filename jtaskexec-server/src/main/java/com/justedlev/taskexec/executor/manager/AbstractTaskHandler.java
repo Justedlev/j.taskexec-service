@@ -21,4 +21,9 @@ public abstract class AbstractTaskHandler<P> implements TaskHandler<P> {
     }
 
     protected abstract TaskResultResponse handle();
+
+    @Override
+    public void run() {
+        execute();
+    }
 }

@@ -25,12 +25,11 @@ public class TaskManagerImpl implements TaskManager {
     }
 
     @Override
-    public TaskResultResponse assign(String taskName) {
+    public Runnable assign(String taskName) {
         return Optional.ofNullable(taskName)
                 .filter(StringUtils::isNotBlank)
                 .filter(handlerMap::containsKey)
                 .map(handlerMap::get)
-                .map(TaskHandler::execute)
                 .orElseThrow(() -> new IllegalArgumentException(
                         String.format("Task '%s' not exists", taskName)));
     }

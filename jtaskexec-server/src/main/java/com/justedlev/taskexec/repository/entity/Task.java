@@ -20,12 +20,8 @@ import java.util.UUID;
 @ToString
 public class Task extends BaseEntity {
     @Id
-    @GeneratedValue(generator = "uuid")
-    @GenericGenerator(name = "uuid", strategy = "org.hibernate.id.UUIDGenerator")
-    @Column(name = "task_id")
-    private UUID id;
-    @Column(name = "task_name", unique = true, nullable = false)
-    private String taskName;
+    @Column(name = "id")
+    private String id;
     @Column(name = "cron")
     private String cron;
     @Builder.Default
