@@ -15,7 +15,7 @@
         <repository>
             <id>github</id>
             <name>GitHub Justedlev Apache Maven Packages</name>
-            <url>https://maven.pkg.github.com/Justedlev/jtaskexec-service</url>
+            <url>https://maven.pkg.github.com/Justedlev/maven-repository</url>
         </repository>
     </distributionManagement>
 </project>
